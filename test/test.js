@@ -111,7 +111,7 @@ describe('serializator', () => {
 
     const json = serializator.serialize(obj)
 
-    should(json).be.eql('{"a":1,"b":"string","c":true,"d":{"$$$buffer$$$":{"type":"Buffer","data":[115,111,109,101,116,104,105,110,103]}}}')
+    should(json).be.eql('{"a":1,"b":"string","c":true,"d":{"$$$buffer$$$":"c29tZXRoaW5n"}}')
 
     const result = serializator.parse(json)
 
@@ -126,7 +126,7 @@ describe('serializator', () => {
 
     const json = serializator.serialize(arr)
 
-    should(json).be.eql('[1,"string",{"$$$buffer$$$":{"type":"Buffer","data":[115,111,109,101,116,104,105,110,103]}},{"binaryFormat":{"$$$buffer$$$":{"type":"Buffer","data":[98,105,110,97,114,121]}}}]')
+    should(json).be.eql('[1,"string",{"$$$buffer$$$":"c29tZXRoaW5n"},{"binaryFormat":{"$$$buffer$$$":"YmluYXJ5"}}]')
 
     const result = serializator.parse(json)
 

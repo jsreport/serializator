@@ -17,7 +17,7 @@ module.exports.serialize = (obj, { prettify = false, prettifySpace = 2 } = {}) =
   }
 
   Buffer.prototype.toJSON = function (...args) { // eslint-disable-line
-    return { [typeKeys.buffer]: originalBufferToJSON.apply(this, args) }
+    return { [typeKeys.buffer]: this.toString('base64') }
   }
 
   res = JSON.stringify(obj, (key, value) => {
@@ -46,12 +46,8 @@ module.exports.parse = (json) => {
       return new Date(value)
     }
 
-    if (
-      key === typeKeys.buffer &&
-      value &&
-      value.type === 'Buffer'
-    ) {
-      return Buffer.from(value)
+    if (key === typeKeys.buffer && value && typeof value === 'string') {
+      return Buffer.from(value, 'base64')
     }
 
     if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean' || value === null) {
