@@ -46,7 +46,7 @@ module.exports.parse = (json) => {
       return new Date(value)
     }
 
-    if (key === typeKeys.buffer && value && typeof value === 'string') {
+    if (key === typeKeys.buffer && value != null && typeof value === 'string') {
       return Buffer.from(value, 'base64')
     }
 

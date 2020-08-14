@@ -137,4 +137,24 @@ describe('serializator', () => {
 
     should(result).be.eql(arr)
   })
+
+  it('should serialize and parse object with empty Buffer', () => {
+    const obj = {
+      a: 1,
+      b: 'string',
+      c: true,
+      d: Buffer.from('')
+    }
+
+    const json = serializator.serialize(obj)
+
+    should(json).be.eql('{"a":1,"b":"string","c":true,"d":{"$$$buffer$$$":""}}')
+
+    const result = serializator.parse(json)
+
+    obj.d = obj.d.toString()
+    result.d = result.d.toString()
+
+    should(result).be.eql(obj)
+  })
 })
