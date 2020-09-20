@@ -30,14 +30,14 @@
     }
   },
   "scripts": {
-    "test": "mocha --timeout 5000 test/test.js && standard"
+    "test": "mocha --timeout 5000 test/test.js && eslint ."
   },
   "devDependencies": {
-    "babel-eslint": "8.2.6",
-    "eslint": "5.4.0",
-    "eslint-plugin-babel": "5.1.0",
+    "babel-eslint": "10.1.0",
+    "eslint": "7.9.0",
+    "eslint-plugin-babel": "5.3.1",
     "mocha": "5.2.0",
     "should": "13.2.3",
-    "standard": "11.0.1"
+    "standard": "14.3.4"
   }
 }

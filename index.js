@@ -6,8 +6,6 @@ const typeKeys = {
 }
 
 module.exports.serialize = (obj, { prettify = false, prettifySpace = 2 } = {}) => {
-  let res
-
   const originalDateToJSON = Date.prototype.toJSON
   const originalBufferToJSON = Buffer.prototype.toJSON
 
@@ -20,7 +18,7 @@ module.exports.serialize = (obj, { prettify = false, prettifySpace = 2 } = {}) =
     return { [typeKeys.buffer]: this.toString('base64') }
   }
 
-  res = JSON.stringify(obj, (key, value) => {
+  const res = JSON.stringify(obj, (key, value) => {
     if (typeof value === 'undefined') {
       return null
     }
