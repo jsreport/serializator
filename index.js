@@ -1,5 +1,8 @@
 'use strict'
 
+const sharedBuffer = require('./sharedBuffer')
+const sharedData = require('./sharedData')
+
 const typeKeys = {
   date: '$$$date$$$',
   buffer: '$$$buffer$$$'
@@ -63,3 +66,6 @@ module.exports.parse = (json) => {
     return value
   })
 }
+
+module.exports.sharedBuffer = sharedBuffer
+module.exports.sharedData = sharedData

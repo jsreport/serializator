@@ -2,6 +2,7 @@
 
 const should = require('should')
 const serializator = require('../')
+const { sharedBuffer, sharedData } = serializator
 
 describe('serializator', () => {
   it('should serialize and parse object with standard JSON supported values', () => {
@@ -157,4 +158,106 @@ describe('serializator', () => {
 
     should(result).be.eql(obj)
   })
+
+  it('sharedBuffer -> .isBinaryInput should return true', () => {
+    sharedBuffer.isBinaryInput(Buffer.from('foo')).should.be.True()
+    sharedBuffer.isBinaryInput(new Uint8Array(5)).should.be.True()
+  })
+
+  it('sharedBuffer -> .isBinaryInput should return false', () => {
+    sharedBuffer.isBinaryInput('foo').should.be.False()
+    sharedBuffer.isBinaryInput(undefined).should.be.False()
+    sharedBuffer.isBinaryInput(false).should.be.False()
+    sharedBuffer.isBinaryInput(1).should.be.False()
+    sharedBuffer.isBinaryInput({}).should.be.False()
+    sharedBuffer.isBinaryInput([]).should.be.False()
+    sharedBuffer.isBinaryInput(new Uint16Array(5)).should.be.False()
+  })
+
+  it('sharedBuffer -> .createFrom should return shared buffer from string', () => {
+    isValidSharedBuffer(sharedBuffer.createFrom('test')).should.be.True()
+  })
+
+  it('sharedBuffer -> .createFrom should return shared buffer from Buffer', () => {
+    isValidSharedBuffer(sharedBuffer.createFrom(Buffer.from('test'))).should.be.True()
+  })
+
+  it('sharedBuffer -> .createFrom should return shared buffer from object', () => {
+    isValidSharedBuffer(sharedBuffer.createFrom({ x: true })).should.be.True()
+  })
+
+  it('sharedBuffer -> .createFrom should return shared buffer from array', () => {
+    isValidSharedBuffer(sharedBuffer.createFrom([{ x: true }])).should.be.True()
+  })
+
+  it('sharedBuffer -> .createFrom should throw error for invalid input', () => {
+    (function () {
+      isValidSharedBuffer(sharedBuffer.createFrom(undefined))
+    }).should.throw()
+  })
+
+  it('sharedBuffer -> .decodeObj should return object', () => {
+    const buf = sharedBuffer.createFrom({ foo: 'foo' })
+    sharedBuffer.decodeObj(buf).foo.should.be.eql('foo')
+    const buf2 = sharedBuffer.createFrom([{ foo: 'foo' }])
+    sharedBuffer.decodeObj(buf2)[0].foo.should.be.eql('foo')
+  })
+
+  it('sharedBuffer -> .decodeObj should return original object when not passing buffer', () => {
+    const obj = { foo: 'foo' }
+    sharedBuffer.decodeObj(obj).should.be.eql(obj)
+  })
+
+  it('sharedData -> .createFrom should return shared data from string', () => {
+    sharedData.createFrom('{ "x": true }').should.have.key('content')
+  })
+
+  it('sharedData -> .createFrom should return shared data from Buffer', () => {
+    sharedData.createFrom(Buffer.from('{ "x": true }')).should.have.key('content')
+  })
+
+  it('sharedData -> .createFrom should return shared data from object', () => {
+    sharedData.createFrom({ x: true }).should.have.key('content')
+  })
+
+  it('sharedData -> .createFrom should return shared data from array', () => {
+    sharedData.createFrom([{ x: true }]).should.have.key('content')
+  })
+
+  it('sharedData -> .createFrom should throw error for invalid input', () => {
+    (function () {
+      sharedData.createFrom(undefined).should.have.key('content')
+    }).should.throw()
+  })
+
+  it('sharedData -> .isSharedData should return true', () => {
+    sharedData.isSharedData(sharedData.createFrom('{ "x": true }')).should.be.True()
+  })
+
+  it('sharedData -> .isSharedData should return false', () => {
+    sharedData.isSharedData({}).should.be.False()
+  })
+
+  it('sharedData -> .getData should return object', () => {
+    sharedData.getData(sharedData.createFrom('{ "x": true }')).x.should.be.True()
+  })
+
+  it('sharedData -> .getData should return original object when not passing buffer', () => {
+    const obj = { x: true }
+    sharedData.getData(obj).should.be.eql(obj)
+  })
+
+  it('sharedData -> .contentIsArray should return true', () => {
+    sharedData.contentIsArray(sharedData.createFrom('[{ "x": true }]')).should.be.True()
+    sharedData.contentIsArray(sharedData.createFrom([{ x: true }])).should.be.True()
+  })
+
+  it('sharedData -> .contentIsArray should return false', () => {
+    sharedData.contentIsArray(sharedData.createFrom('{ "x": true }')).should.be.False()
+    sharedData.contentIsArray(sharedData.createFrom({ x: true })).should.be.False()
+  })
 })
+
+function isValidSharedBuffer (buf) {
+  return Object.prototype.toString.call(buf.buffer) === '[object SharedArrayBuffer]'
+}
