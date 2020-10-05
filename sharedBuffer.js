@@ -1,3 +1,4 @@
+const serializator = require('./')
 const { StringDecoder } = require('string_decoder')
 
 function isBinaryInput (input) {
@@ -37,7 +38,7 @@ function createFrom (input) {
     }
   } else if (typeof input === 'object') {
     // if it is object or array just stringify
-    return createFrom(JSON.stringify(input))
+    return createFrom(serializator.serialize(input))
   }
 
   throw new Error('Invalid input type to create shared buffer')
@@ -52,7 +53,7 @@ function decodeObj (input) {
       return undefined
     }
 
-    return JSON.parse(jsonStr)
+    return serializator.parse(jsonStr)
   }
 
   return input
