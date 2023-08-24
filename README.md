@@ -1,3 +1,6 @@
+**⚠️ This repository has been moved to the monorepo [jsreport/jsreport](https://github.com/jsreport/jsreport)**
+--
+
 # serializator
 [![NPM Version](http://img.shields.io/npm/v/serializator.svg?style=flat-square)](https://npmjs.com/package/serializator)
 [![License](http://img.shields.io/npm/l/serializator.svg?style=flat-square)](http://opensource.org/licenses/MIT)
